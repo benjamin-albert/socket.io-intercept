@@ -1,13 +1,26 @@
 {
-  "name": "engine.mock",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/intercept.js",
+  "name": "socket.io-intercept",
+  "version": "0.0.1",
+  "description": "Library for mocking socket.io transmission",
+  "keywords": [
+    "realtime",
+    "framework",
+    "websocket",
+    "test",
+    "mock",
+    "socket",
+    "io"
+  ],
+  "main": ".lib/intercept.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Benjamin Albert",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjamin-albert/socket.io-intercept"
+  },
   "dependencies": {
     "component-emitter": "^1.2.1",
     "component-inherit": "0.0.3",
