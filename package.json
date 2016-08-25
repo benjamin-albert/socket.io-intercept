@@ -11,7 +11,7 @@
     "socket",
     "io"
   ],
-  "main": ".lib/intercept.js",
+  "main": "lib/intercept.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
