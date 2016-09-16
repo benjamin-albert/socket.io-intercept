@@ -24,32 +24,35 @@ function beforeEach(t) {
 }
 
 test('intercept server created by socket.io', function(t) {
+  t.plan(2);
+
   beforeEach(t);
 
   intercept({port: PORT});
 
-  var expecteObject = {unit: 'Testing'};
+  var expectedObject = {unit: 'Testing'};
   var expectedMessage = 'works!';
 
   var io = require('socket.io')(PORT);
-  io.on('connection', function(socket) {
-    socket.emit('test1', function(object) {
-      t.deepEqual(object, expecteObject, 'The expected object was passed');
-    });
+  io.on('connection', function(client){
+    client.emit('test1', expectedMessage);
 
-    socket.on('test2', function(message) {
-      t.deepEqual(message, expectedMessage, 'The expected object was passed');
-      t.end();
+    client.on('test2', function(cb) {
+      cb(expectedObject);
     });
   });
 
   var client = require('socket.io-client')('http://localhost:' + PORT + '/');
   client.on('connect', function() {
-    client.emit('test2', expectedMessage);
-  });
+    client.on('test1', function(message) {
+      t.deepEqual(message, expectedMessage, 'The expected message was passed');
 
-  client.on('test1', function(cb) {
-    cb(expecteObject);
-    client.disconnect();
+      client.emit('test2', function(object) {
+        t.deepEqual(object, expectedObject, 'The expected object was passed in the ake');
+        client.disconnect();
+        t.end();
+      });
+    });
+
   });
 });
