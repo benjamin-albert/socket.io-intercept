@@ -6,7 +6,7 @@ var intercept = require('../');
 
 var PORT = 1337;
 
-function beforeEach(t) {
+function preventUnmockedListen(t) {
   var server = http.createServer(function(req, res) {
     res.writeHead(404);
     res.end();
@@ -23,17 +23,12 @@ function beforeEach(t) {
   }
 }
 
-test('intercept server created by socket.io', function(t) {
+function testIntercept(io, t) {
   t.plan(2);
-
-  beforeEach(t);
-
-  intercept({port: PORT});
 
   var expectedObject = {unit: 'Testing'};
   var expectedMessage = 'works!';
 
-  var io = require('socket.io')(PORT);
   io.on('connection', function(client){
     client.emit('test1', expectedMessage);
 
@@ -53,47 +48,35 @@ test('intercept server created by socket.io', function(t) {
         t.end();
       });
     });
+
   });
+}
+
+test('intercept server created by socket.io', function(t) {
+  preventUnmockedListen(t);
+
+  intercept({port: PORT});
+
+  var io = require('socket.io')(PORT);
+
+  testIntercept(io, t);
 });
 
 test('intercept server created by user', function(t) {
-  t.plan(2);
-
-  beforeEach(t);
-
-  var sevrer = http.createServer(function(req, res) {
-    res.writeHead(404);
-    res.end();
-  });
-
-  var expectedObject = {unit: 'Testing'};
-  var expectedMessage = 'works!';
+  preventUnmockedListen(t);
 
   intercept({port: PORT});
 
-  var io = require('socket.io')(sevrer);
-  io.on('connection', function(client){
-    client.emit('test1', expectedMessage);
+  var server = http.createServer(function(req, res) {
+    res.writeHead(404);
+    res.end();
 
-    client.on('test2', function(cb) {
-      cb(expectedObject);
-    });
+    t.end();
   });
 
+  var io = require('socket.io')(server);
 
-  sevrer.listen(PORT);
+  server.listen(PORT);
 
-  var client = require('socket.io-client')('http://localhost:' + PORT + '/');
-  client.on('connect', function() {
-    client.on('test1', function(message) {
-      t.deepEqual(message, expectedMessage, 'The expected message was passed');
-
-      client.emit('test2', function(object) {
-        t.deepEqual(object, expectedObject, 'The expected object was passed in the ake');
-        client.disconnect();
-        t.end();
-      });
-    });
-
-  });
+  testIntercept(io, t);
 });
