@@ -53,6 +53,47 @@ test('intercept server created by socket.io', function(t) {
         t.end();
       });
     });
+  });
+});
+
+test('intercept server created by user', function(t) {
+  t.plan(2);
+
+  beforeEach(t);
+
+  var sevrer = http.createServer(function(req, res) {
+    res.writeHead(404);
+    res.end();
+  });
+
+  var expectedObject = {unit: 'Testing'};
+  var expectedMessage = 'works!';
+
+  intercept({port: PORT});
+
+  var io = require('socket.io')(sevrer);
+  io.on('connection', function(client){
+    client.emit('test1', expectedMessage);
+
+    client.on('test2', function(cb) {
+      cb(expectedObject);
+    });
+  });
+
+
+  sevrer.listen(PORT);
+
+  var client = require('socket.io-client')('http://localhost:' + PORT + '/');
+  client.on('connect', function() {
+    client.on('test1', function(message) {
+      t.deepEqual(message, expectedMessage, 'The expected message was passed');
+
+      client.emit('test2', function(object) {
+        t.deepEqual(object, expectedObject, 'The expected object was passed in the ake');
+        client.disconnect();
+        t.end();
+      });
+    });
 
   });
 });
