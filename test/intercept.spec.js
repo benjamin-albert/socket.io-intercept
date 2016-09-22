@@ -80,3 +80,35 @@ test('intercept server created by user', function(t) {
 
   testIntercept(io, t);
 });
+
+test('Extra request headers are sent', function(t) {
+  t.plan(2);
+  preventUnmockedListen(t);
+
+  var opts = {
+    extraHeaders: {
+      'X-Custom-Header-For-My-Project': 'my-secret-access-token',
+      'Cookie': 'user_session=NI2JlCKF90aE0sJZD9ZzujtdsUqNYSBYxzlTsvdSUe35ZzdtVRGqYFr0kdGxbfc5gUOkR9RGp20GVKza; path=/; expires=Tue, 07-Apr-2015 18:18:08 GMT; secure; HttpOnly'
+    }
+  };
+
+  intercept({port: PORT});
+
+  var io = require('socket.io')(PORT);
+  io.on('connection', function(client) {
+    var expectedHeaders = opts.extraHeaders;
+    var headers = client.request.headers;
+
+    for (var key in expectedHeaders) {
+      if (expectedHeaders.hasOwnProperty(key)) {
+        t.equal(headers[key], headers[key], 'The request header has ' + key);
+      }
+    }
+  });
+
+  var client = require('socket.io-client')('http://localhost:' + PORT + '/', opts);
+  client.on('connect', function() {
+    client.disconnect(true);
+    t.end();
+  });
+});
