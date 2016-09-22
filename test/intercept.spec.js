@@ -1,4 +1,5 @@
 'use strict';
+var log = require('why-is-node-running');
 
 var test = require('tape');
 var http = require('http');
@@ -79,6 +80,19 @@ test('intercept server created by user', function(t) {
   server.listen(PORT);
 
   testIntercept(io, t);
+});
+
+test('connect_error is emitted when intercepting without a server', function(t) {
+  t.plan(1);
+
+  intercept({port: PORT + 1});
+
+  var client = require('socket.io-client')('http://localhost:' + (PORT + 1) + '/');
+  client.on('connect_error', function(error) {
+    t.equal(error.message, 'You are trying to intercept port ' + (PORT + 1) + ' but there is no server listening on this port');
+    client.disconnect();
+    t.end();
+  });
 });
 
 test('Extra request headers are sent', function(t) {
