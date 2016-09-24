@@ -1,5 +1,4 @@
 'use strict';
-var log = require('why-is-node-running');
 
 var test = require('tape');
 var http = require('http');
@@ -82,6 +81,26 @@ test('intercept server created by user', function(t) {
   testIntercept(io, t);
 });
 
+test('The callback to server.listen() is called', function(t) {
+  preventUnmockedListen(t);
+
+  intercept({port: PORT});
+
+  var server = http.createServer(function(req, res) {
+    res.writeHead(404);
+    res.end();
+
+    t.end();
+  });
+
+  var io = require('socket.io')(server);
+
+  server.listen(PORT, function() {
+    t.ok(true, 'The callback to server.listen() was called');
+    t.end();
+  });
+});
+
 test('connect_error is emitted when intercepting without a server', function(t) {
   t.plan(1);
 
@@ -124,7 +143,7 @@ test('Extra request headers are sent', function(t) {
 
   var client = require('socket.io-client')('http://localhost:' + PORT + '/', opts);
   client.on('connect', function() {
-    client.disconnect(true);
+    client.disconnect();
     t.end();
   });
 });
