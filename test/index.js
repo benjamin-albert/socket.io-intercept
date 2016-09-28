@@ -1,0 +1,1 @@
+require('./intercept.spec.js');
