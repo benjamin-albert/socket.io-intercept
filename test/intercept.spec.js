@@ -1,5 +1,5 @@
 'use strict';
-var log = require('why-is-node-running');
+// var log = require('why-is-node-running');
 
 var test = require('tape');
 var http = require('http');
@@ -21,7 +21,7 @@ function preventUnmockedListen(t) {
   t.end = function() {
     server.close();
     end.apply(this, arguments);
-  }
+  };
 }
 
 function testIntercept(io, t) {
