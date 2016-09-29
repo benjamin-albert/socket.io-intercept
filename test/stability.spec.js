@@ -16,7 +16,12 @@ test('server that was NOT intercepted works as expected', function(t) {
     .get('http://localhost:' + port)
     .end(function(err, res) {
       t.equal(res.status, 404, 'The expected status wes returnd');
-      io.close();
-      t.end();
+
+      var client = require('socket.io-client')('http://localhost:' + port);
+      client.on('connect', function() {
+        client.disconnect();
+        io.close();
+        t.end();
+      })
     });
 });
