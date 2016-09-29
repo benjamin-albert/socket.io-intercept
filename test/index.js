@@ -1,1 +1,2 @@
-require('./intercept.spec.js');
+require('./intercept.spec');
+require('./stability.spec');
