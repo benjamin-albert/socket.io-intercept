@@ -25,7 +25,7 @@ test('server that was NOT intercepted works as expected', function(t) {
         client.disconnect();
         io.close();
         t.end();
-      })
+      });
     });
 });
 
@@ -56,6 +56,6 @@ test('server created by user that was NOT intercepted works as expected', functi
         client.disconnect();
         io.close();
         t.end();
-      })
+      });
     });
 });
