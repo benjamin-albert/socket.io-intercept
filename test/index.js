@@ -1,2 +1,2 @@
 require('./intercept.spec');
-require('./stability.spec');
+require('./safety.spec');

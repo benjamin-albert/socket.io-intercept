@@ -12,21 +12,7 @@ test('server that was NOT intercepted works as expected', function(t) {
 
   var io = require('socket.io')(PORT);
 
-  // The point of this test is to make sure that we are
-  // NOT mocking socket.io (and http server's listen)
-  // so we make a real HTTP request.
-  request
-    .get('http://localhost:' + PORT)
-    .end(function(err, res) {
-      t.equal(res.status, 404, 'The expected status wes returnd');
-
-      var client = require('socket.io-client')('http://localhost:' + PORT);
-      client.on('connect', function() {
-        client.disconnect();
-        io.close();
-        t.end();
-      });
-    });
+  testUnmockedServer(io, t);
 });
 
 test('server created by user that was NOT intercepted works as expected', function(t) {
@@ -43,6 +29,10 @@ test('server created by user that was NOT intercepted works as expected', functi
 
   server.listen(PORT);
 
+  testUnmockedServer(io, t);
+});
+
+function testUnmockedServer(io, t) {
   // The point of this test is to make sure that we are
   // NOT mocking socket.io (and http server's listen)
   // so we make a real HTTP request.
@@ -58,4 +48,4 @@ test('server created by user that was NOT intercepted works as expected', functi
         t.end();
       });
     });
-});
+}
