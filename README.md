@@ -22,7 +22,7 @@ var intercept = require('socket.io-intercept');
 // Make sure to call this before server.listen(port)
 intercept({port: 3000});
 
-// Require your socket.io application module.
+// Require your socket.io application that listens on port 3000.
 require('./server');
 
 // Install and use socket.io-client in your spec (unit test).
