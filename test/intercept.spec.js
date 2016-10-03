@@ -147,3 +147,44 @@ test('Extra request headers are sent', function(t) {
     t.end();
   });
 });
+
+test('intercept() throws when passed invalid aeguments', function(t) {
+  var expectedMessage = 'You must pass options object or port number to socket.io-intercept';
+  var expectedBadObjectMsg =  'The options object does not have a numeric port property';
+  try {
+    intercept();
+    throw new Error('Calling intercept() without arguments should throw');
+  } catch (e) {
+    t.equal(e.message, expectedMessage, 'Passing undefined to intercept() throws the expected error');
+  }
+
+  try {
+    intercept(function() {});
+    throw new Error('Calling intercept() with a function as the first argument should throw');
+  } catch (e) {
+    t.equal(e.message, expectedMessage, 'Passing a function as the first argument to intercept() throws the expected error');
+  }
+
+  try {
+    intercept('abc');
+    throw new Error('Calling intercept() with a String as the first argument should throw');
+  } catch (e) {
+    t.equal(e.message, expectedMessage, 'Passing a String as the first argument to intercept() throws the expected error');
+  }
+
+  try {
+    intercept({ loem: 'ipsum', dolor: 'sit' });
+    throw new Error('Calling intercept() with object that does not have a port propery should throw');
+  } catch (e) {
+    t.equal(e.message, expectedBadObjectMsg, 'The options object does not have a numeric port property');
+  }
+
+  try {
+    intercept(/[0-9]/);
+    throw new Error('Calling intercept() with a RegExp as the first argument should throw');
+  } catch (e) {
+    t.equal(e.message, expectedBadObjectMsg, 'The options object does not have a numeric port property');
+  }
+
+  t.end();
+});
