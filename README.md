@@ -20,7 +20,8 @@ spec (unit test).
 ```js
 var intercept = require('socket.io-intercept');
 // Make sure to call this before server.listen(port)
-intercept({port: 3000});
+// Intercept connections on port 3000
+intercept(3000);
 
 // Require your socket.io application that listens on port 3000.
 require('./server');

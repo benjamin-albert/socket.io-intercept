@@ -106,7 +106,7 @@ test('connect_error is emitted when intercepting without a server', function(t) 
 
   var badPort = PORT + 1;
 
-  intercept({port: badPort});
+  intercept(badPort);
 
   var client = require('socket.io-client')('http://localhost:' + badPort + '/');
   client.on('connect_error', function(error) {
@@ -127,7 +127,7 @@ test('Extra request headers are sent', function(t) {
     }
   };
 
-  intercept({port: PORT});
+  intercept(PORT);
 
   var io = require('socket.io')(PORT);
   io.on('connection', function(client) {
