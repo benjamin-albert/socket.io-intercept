@@ -38,7 +38,7 @@ client.on('connect', function() {
 ```
 
 Once a socket.io server is intercepted:
-* The client talks to the server (and vise-versa) in memory using the EventEmitter transport.
+* The client talks to the server (and vise-versa) in memory using an in memory transport.
 * Node.js will exit as soon as all clients disconnect (no need to close you're HTTP server).
 * You can recreate you're app's socket.io server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
 * No port/addr in uses issues (You're socket.io app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
