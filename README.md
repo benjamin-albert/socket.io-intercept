@@ -39,20 +39,20 @@ client.on('connect', function() {
 
 Once a Socket.IO server is intercepted:
 
-* The client talks to the server (and vise-versa) in memory using an in memory transport.
-* Node.js will exit as soon as all clients disconnect (no need to close you're HTTP server).
-* You can recreate you're app's socket.io server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
-* No port/addr in uses issues (You're socket.io app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
+* The client talks to the server (and vise-versa) in memory.
+* Node.js will exit as soon as all clients disconnect (no need to close your HTTP server).
+* You can recreate your app's Socket.IO server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
+* No port/addr in uses issues (Your Socket.IO app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
 
 # Goals
-The main goal of Socket.IO-intercept is to make it easy to test your application code agains the **real version of socket.io** (or socket.io-client) your app is using.
+The main goal of Socket.IO-intercept is to make it easy to test your application code against the **real version of socket.io** (or socket.io-client) your app is using.
 
-This approach offers the following advantages over socket.io mocking libraries that are alternative test friendly implementations of socket.io:
+This approach offers the following advantages over other libraries that are alternative test friendly implementations of Socket.IO:
 
-* 100% socket.io API consistency (**All of socket.io's features are supported**).
+* 100% Socket.IO API consistency (**All of socket.io's features are supported**).
 * **Less existing code refactoring** and smaller learning curve (once you call `intercept(port)` you use [socket.io](https://www.npmjs.com/package/socket.io) and [socket.io-client](https://www.npmjs.com/package/socket.io-client) the same way you are use to).
-* If the socket.io team add a new feature you most likely **won't have to wait for this project to implement that featuer properly**.
-* When you decide to update your socket.io **your tests can give you more meaningful insight** (in most cases without having to update this library).
+* If the Socket.IO team add a new feature you most likely **won't have to wait for this project to implement that feature properly**.
+* When you decide to update your Socket.IO **your tests can give you more meaningful insight** (in most cases without having to update this library).
 
 Another important design goal of Socket.IO Intercept is to provide the bare minimum you need to start testing your code, and therefor providing a simple way for the user to start testing there code.
 
