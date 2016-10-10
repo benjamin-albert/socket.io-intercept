@@ -1,10 +1,10 @@
-# socket.io-intercept
+# Socket.IO Intercept
 
-socket.io-intercept is a socket.io mocking library for Node.js
+Socket.IO Intercept is a Socket.IO mocking library for Node.js
 
-socket.io-intercept can be used to test socket.io server and client modules.
+Socket.IO Intercept can be used to test Socket.IO server and client modules.
 
-For instance, if a module exposes a socket.io server, you can test that module in isolation.
+For instance, if a module exposes a Socket.IO server, you can test that module in isolation.
 
 # Install
 
@@ -14,7 +14,7 @@ $ npm install socket.io-intercept --save-dev
 
 ## Use
 
-The following example intercepts socket.io connections on port `3000` in your
+The following example intercepts Socket.IO connections on port `3000` in your
 spec (unit test).
 
 ```js
@@ -37,14 +37,15 @@ client.on('connect', function() {
 });
 ```
 
-Once a socket.io server is intercepted:
+Once a Socket.IO server is intercepted:
+
 * The client talks to the server (and vise-versa) in memory using an in memory transport.
 * Node.js will exit as soon as all clients disconnect (no need to close you're HTTP server).
 * You can recreate you're app's socket.io server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
 * No port/addr in uses issues (You're socket.io app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
 
 # Goals
-The main goal of `socket.io-intercept` is to make it easy to test your application code agains the **real version of socket.io** (or socket.io-client) your app is using.
+The main goal of Socket.IO-intercept is to make it easy to test your application code agains the **real version of socket.io** (or socket.io-client) your app is using.
 
 This approach offers the following advantages over socket.io mocking libraries that are alternative test friendly implementations of socket.io:
 
@@ -53,6 +54,6 @@ This approach offers the following advantages over socket.io mocking libraries t
 * If the socket.io team add a new feature you most likely **won't have to wait for this project to implement that featuer properly**.
 * When you decide to update your socket.io **your tests can give you more meaningful insight** (in most cases without having to update this library).
 
-Another important design goal of `socket.io-intercept` is to provide the bare minimum you need to start testing your code, and therefor providing a simple way for the user to start testing there code.
+Another important design goal of Socket.IO Intercept is to provide the bare minimum you need to start testing your code, and therefor providing a simple way for the user to start testing there code.
 
-Once your application start growing and becomes more complex `socket.io-intercept` expectes you to use it along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar for unit testing socket.io
+Once your application start growing and becomes more complex Socket.IO Intercept expects you to use it along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar for unit testing Socket.IO
