@@ -9,7 +9,7 @@ For instance, if a module exposes a socket.io server, you can test that module i
 # Install
 
 ```sh
-$ npm install socket.io-intercept
+$ npm install socket.io-intercept --save-dev
 ```
 
 ## Use
@@ -42,3 +42,17 @@ Once a socket.io server is intercepted:
 * Node.js will exit as soon as all clients disconnect (no need to close you're HTTP server).
 * You can recreate you're app's socket.io server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
 * No port/addr in uses issues (You're socket.io app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
+
+# Goals
+The main goal of `socket.io-intercept` is to make it easy to test your application code agains the **real version of socket.io** (or socket.io-client) your app is using.
+
+This approach offers the following advantages over socket.io mocking libraries that are alternative test friendly implementations of socket.io:
+
+* 100% socket.io API consistency (**All of socket.io's features are supported**).
+* **Less existing code refactoring** and smaller learning curve (once you call `intercept(port)` you use [socket.io](https://www.npmjs.com/package/socket.io) and [socket.io-client](https://www.npmjs.com/package/socket.io-client) the same way you are use to).
+* If the socket.io team add a new feature you most likely **won't have to wait for this project to implement that featuer properly**.
+* When you decide to update your socket.io **your tests can give you more meaningful insight** (in most cases without having to update this library).
+
+Another important design goal of `socket.io-intercept` is to provide the bare minimum you need to start testing your code, and therefor providing a simple way for the user to start testing there code.
+
+Once your application start growing and becomes more complex `socket.io-intercept` expectes you to use it along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar for unit testing socket.io
