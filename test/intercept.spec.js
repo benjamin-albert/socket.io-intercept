@@ -20,7 +20,7 @@ function preventUnmockedListen(t) {
   t.end = function() {
     server.close();
     end.apply(this, arguments);
-  }
+  };
 }
 
 function testIntercept(io, t) {

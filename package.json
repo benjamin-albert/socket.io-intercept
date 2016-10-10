@@ -13,7 +13,9 @@
   ],
   "main": "lib/intercept.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape \"test/index.js\"",
+    "lint": "jshint test lib",
+    "cover": "istanbul cover test/index.js"
   },
   "author": "Benjamin Albert",
   "license": "MIT",
@@ -31,6 +33,8 @@
     "supertest": "^2.0.0"
   },
   "devDependencies": {
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.3",
     "tape": "^4.6.0"
   }
 }
