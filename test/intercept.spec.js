@@ -61,7 +61,6 @@ test('intercept server created by socket.io', function(t) {
 
   testIntercept(io, t);
 });
-
 test('intercept server created by user', function(t) {
   preventUnmockedListen(t);
 
@@ -81,7 +80,7 @@ test('intercept server created by user', function(t) {
   testIntercept(io, t);
 });
 
-test('The callback to server.listen() is called', function(t) {
+function createTestServer(t) {
   preventUnmockedListen(t);
 
   intercept({port: PORT});
@@ -93,7 +92,13 @@ test('The callback to server.listen() is called', function(t) {
     t.end();
   });
 
-  var io = require('socket.io')(server);
+  require('socket.io')(server);
+
+  return server;
+}
+
+test('The callback to server.listen() is called', function(t) {
+  var server = createTestServer(t);
 
   t.deepEqual(server.address(), null, 'this.address() returns null before calling listen');
 
@@ -104,18 +109,7 @@ test('The callback to server.listen() is called', function(t) {
 });
 
 test('The callback to server.listen() is called when passed a bind address', function(t) {
-  preventUnmockedListen(t);
-
-  intercept({port: PORT});
-
-  var server = http.createServer(function(req, res) {
-    res.writeHead(404);
-    res.end();
-
-    t.end();
-  });
-
-  var io = require('socket.io')(server);
+  var server = createTestServer(t);
 
   t.deepEqual(server.address(), null, 'this.address() returns null before calling listen');
 
@@ -126,18 +120,7 @@ test('The callback to server.listen() is called when passed a bind address', fun
 });
 
 test('The server listening event is emitted', function(t) {
-  preventUnmockedListen(t);
-
-  intercept({port: PORT});
-
-  var server = http.createServer(function(req, res) {
-    res.writeHead(404);
-    res.end();
-
-    t.end();
-  });
-
-  var io = require('socket.io')(server);
+  var server = createTestServer(t);
 
   server.on('listening', function() {
     t.deepEqual(this.address(), { address: '::', family: 'IPv6', port: PORT }, 'this.address() returns the expected object');
