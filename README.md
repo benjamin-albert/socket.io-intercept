@@ -42,6 +42,7 @@ Once a Socket.IO server is intercepted:
 * The client talks to the server (and vise-versa) in memory.
 * Node.js will exit as soon as all clients disconnect (no need to close your HTTP server).
 * You can recreate your app's Socket.IO server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
+* `server.listen(port)` becomes synchronous (no need add a callback for `server.listen()` in your app's module).
 * No port/addr in uses issues (Your Socket.IO app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
 
 # Goals
