@@ -95,10 +95,34 @@ test('The callback to server.listen() is called', function(t) {
 
   var io = require('socket.io')(server);
 
+  t.deepEqual(server.address(), null, 'this.address() returns null before calling listen');
+
   server.listen(PORT, function() {
-    t.ok(true, 'The callback to server.listen() was called');
+    t.deepEqual(this.address(), { address: '::', family: 'IPv6', port: PORT }, 'this.address() returns the expected object');
     t.end();
   });
+});
+
+test('The server listening event is emitted', function(t) {
+  preventUnmockedListen(t);
+
+  intercept({port: PORT});
+
+  var server = http.createServer(function(req, res) {
+    res.writeHead(404);
+    res.end();
+
+    t.end();
+  });
+
+  var io = require('socket.io')(server);
+
+  server.on('listening', function() {
+    t.deepEqual(this.address(), { address: '::', family: 'IPv6', port: PORT }, 'this.address() returns the expected object');
+    t.end();
+  });
+
+  server.listen(PORT);
 });
 
 test('connect_error is emitted when intercepting without a server', function(t) {
