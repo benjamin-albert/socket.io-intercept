@@ -43,7 +43,7 @@ Once a Socket.IO server is intercepted:
 * Node.js will exit as soon as all clients disconnect (no need to close your HTTP server).
 * You can recreate your app's Socket.IO server multiple times without having to introduce code that explicitly closes, and wait for the server to close before starting the next test.
 * `server.listen(port)` becomes synchronous (no need add a callback for `server.listen()` in your app's module).
-* No port/addr in uses issues (Your Socket.IO app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
+* No port/addr in use issues (Your Socket.IO app's HTTP server will **NOT** prevent a real server from binding on the port it's listening on).
 
 # Goals
 The main goal of Socket.IO-intercept is to make it easy to test your application code against the **real version of socket.io** (or socket.io-client) your app is using.
