@@ -177,6 +177,31 @@ test('Extra request headers are sent', function(t) {
   });
 });
 
+test('Listening on the same intercepted port more than once throws', function(t) {
+  intercept(PORT);
+
+  var server = http.createServer(function() {});
+  var io = require('socket.io')(server);
+  server.listen(PORT);
+
+  server = http.createServer(function() {})
+    .on('error', function(err) {
+      t.ok(err instanceof Error, 'An error was provided');
+      t.equal(err.message, 'listen EADDRINUSE :::1337, Call intercepted(...) before listening on this port again');
+      t.equal(err.code, 'EADDRINUSE', 'The error has the expected code');
+      t.equal(err.errno, 'EADDRINUSE', 'The error has the expected errno');
+      t.equal(err.syscall, 'listen', 'The error has the expected syscall');
+      t.equal(err.port, 1337, 'The error has the expected port');
+      t.end();
+    })
+    .on('listening', function() {
+      t.end(new Error('Listening on the same intercepted port more than once should throws'));
+    });
+
+  io = require('socket.io')(server);
+  server.listen(PORT);
+});
+
 test('intercept() throws when passed invalid aeguments', function(t) {
   var expectedMessage = 'You must pass options object or port number to socket.io-intercept';
   var expectedBadObjectMsg =  'The options object does not have a numeric port property';
