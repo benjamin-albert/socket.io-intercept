@@ -18,8 +18,11 @@ function preventUnmockedListen(t) {
 
   var end = t.end;
   t.end = function() {
-    server.close();
-    end.apply(this, arguments);
+    var self = this;
+    var args = arguments;
+    server.close(function() {
+      end.apply(self, args);
+    });
   };
 }
 
@@ -61,6 +64,7 @@ test('intercept server created by socket.io', function(t) {
 
   testIntercept(io, t);
 });
+
 test('intercept server created by user', function(t) {
   preventUnmockedListen(t);
 
@@ -78,6 +82,41 @@ test('intercept server created by user', function(t) {
   server.listen(PORT);
 
   testIntercept(io, t);
+});
+
+test('Socket.IO namespaces work as expected', function(t) {
+  t.plan(2);
+
+  preventUnmockedListen(t);
+
+  intercept({port: PORT});
+
+  var io = require('socket.io')(PORT);
+
+  var adminConnections = 0;
+  io.of('/admin').on('connection', function(s) {
+    adminConnections++;
+  });
+
+  var chatConnections = 0;
+  io.of('/chat').on('connection', function() {
+    chatConnections++;
+    t.equal(adminConnections, 1, 'The expected admin connections accourd');
+    t.equal(chatConnections, 1, 'The expected chat connections accourd');
+  });
+
+  var adminClient = require('socket.io-client')('http://localhost:' + PORT + '/admin');
+  adminClient.on('connect', function() {
+
+
+    var chatClient = require('socket.io-client')('http://localhost:' + PORT + '/chat');
+
+      adminClient.disconnect();
+    chatClient.on('connect', function() {
+      chatClient.disconnect();
+      t.end();
+    });
+  });
 });
 
 function createTestServer(t) {
@@ -202,7 +241,7 @@ test('Listening on the same intercepted port more than once throws', function(t)
   server.listen(PORT);
 });
 
-test('intercept() throws when passed invalid aeguments', function(t) {
+test('intercept() throws when passed invalid arguments', function(t) {
   var expectedMessage = 'You must pass options object or port number to socket.io-intercept';
   var expectedBadObjectMsg =  'The options object does not have a numeric port property';
   try {
