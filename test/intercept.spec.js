@@ -81,15 +81,13 @@ test('Socket.IO namespaces work as expected', function(t) {
 
   var adminClient = require('socket.io-client')('http://localhost:' + PORT + '/admin');
   adminClient.on('connect', function() {
+    adminClient.disconnect();
+  });
 
-
-    var chatClient = require('socket.io-client')('http://localhost:' + PORT + '/chat');
-
-      adminClient.disconnect();
-    chatClient.on('connect', function() {
-      chatClient.disconnect();
-      t.end();
-    });
+  var chatClient = require('socket.io-client')('http://localhost:' + PORT + '/chat');
+  chatClient.on('connect', function() {
+    chatClient.disconnect();
+    t.end();
   });
 });
 
