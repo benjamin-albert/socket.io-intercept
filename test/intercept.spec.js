@@ -6,26 +6,6 @@ var intercept = require('../');
 
 var PORT = 1337;
 
-function preventUnmockedListen(t) {
-  var server = http.createServer(function(req, res) {
-    res.writeHead(404);
-    res.end();
-
-    t.end(new Error('Transport was not mocked'));
-  });
-
-  server.listen(PORT);
-
-  var end = t.end;
-  t.end = function() {
-    var self = this;
-    var args = arguments;
-    server.close(function() {
-      end.apply(self, args);
-    });
-  };
-}
-
 function testIntercept(io, t) {
   t.plan(2);
 
@@ -56,8 +36,6 @@ function testIntercept(io, t) {
 }
 
 test('intercept server created by socket.io', function(t) {
-  preventUnmockedListen(t);
-
   intercept({port: PORT});
 
   var io = require('socket.io')(PORT);
@@ -66,8 +44,6 @@ test('intercept server created by socket.io', function(t) {
 });
 
 test('intercept server created by user', function(t) {
-  preventUnmockedListen(t);
-
   intercept({port: PORT});
 
   var server = http.createServer(function(req, res) {
@@ -86,8 +62,6 @@ test('intercept server created by user', function(t) {
 
 test('Socket.IO namespaces work as expected', function(t) {
   t.plan(2);
-
-  preventUnmockedListen(t);
 
   intercept({port: PORT});
 
@@ -120,8 +94,6 @@ test('Socket.IO namespaces work as expected', function(t) {
 });
 
 function createTestServer(t) {
-  preventUnmockedListen(t);
-
   intercept({port: PORT});
 
   var server = http.createServer(function(req, res) {
@@ -186,7 +158,6 @@ test('connect_error is emitted when intercepting without a server', function(t) 
 
 test('Extra request headers are sent', function(t) {
   t.plan(2);
-  preventUnmockedListen(t);
 
   var opts = {
     extraHeaders: {
