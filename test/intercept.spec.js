@@ -1,6 +1,7 @@
 'use strict';
 
 var test = require('tape');
+var fs = require('fs');
 var http = require('http');
 var intercept = require('../');
 
@@ -105,6 +106,26 @@ function createTestServer(t) {
 
   return server;
 }
+
+test('Sending large binary', function(t) {
+  intercept(PORT);
+
+  var clientScript = require.resolve('socket.io-client/socket.io.js');
+  var expectedBuf = fs.readFileSync(clientScript);
+  var io = require('socket.io')(PORT);
+  io.on('connection', function(client) {
+    client.on('binary', function(buf) {
+      t.ok(expectedBuf.equals(buf), 'The expected binary was recived');
+      t.end();
+    });
+  });
+
+  var client = require('socket.io-client')('http://localhost:' + PORT + '/');
+  client.on('connect', function() {
+    client.emit('binary', expectedBuf);
+    client.disconnect();
+  });
+});
 
 test('The callback to server.listen() is called', function(t) {
   var server = createTestServer(t);
