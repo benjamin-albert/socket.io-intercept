@@ -76,8 +76,8 @@ test('Socket.IO namespaces work as expected', function(t) {
   var chatConnections = 0;
   io.of('/chat').on('connection', function() {
     chatConnections++;
-    t.equal(adminConnections, 1, 'The expected admin connections accourd');
-    t.equal(chatConnections, 1, 'The expected chat connections accourd');
+    t.equal(adminConnections, 1, 'The expected admin connections occurred');
+    t.equal(chatConnections, 1, 'The expected chat connections occurred');
   });
 
   var adminClient = require('socket.io-client')('http://localhost:' + PORT + '/admin');
@@ -115,7 +115,7 @@ test('Sending large binary', function(t) {
   var io = require('socket.io')(PORT);
   io.on('connection', function(client) {
     client.on('binary', function(buf) {
-      t.ok(expectedBuf.equals(buf), 'The expected binary was recived');
+      t.ok(expectedBuf.equals(buf), 'The expected binary was received');
       t.end();
     });
   });

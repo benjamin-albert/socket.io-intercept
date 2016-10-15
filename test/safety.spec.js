@@ -39,7 +39,7 @@ function testUnmockedServer(io, t) {
   request
     .get('http://localhost:' + PORT)
     .end(function(err, res) {
-      t.equal(res.status, 404, 'The expected status wes returnd');
+      t.equal(res.status, 404, 'The expected status was returnd');
 
       var client = require('socket.io-client')('http://localhost:' + PORT);
       client.on('connect', function() {
