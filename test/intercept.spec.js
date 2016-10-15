@@ -92,6 +92,51 @@ test('Socket.IO namespaces work as expected', function(t) {
   });
 });
 
+test('Multiple clients', function(t) {
+  t.plan(2);
+
+  intercept(PORT);
+
+  var numClients = 20;
+  var connectionCount = 0;
+  var akeCount = 0;
+
+  var io = require('socket.io')(PORT);
+  io.on('connection', function(client) {
+    connectionCount++;
+    client.on('login', function(id, cb) {
+      cb(id);
+    });
+  });
+
+  for (var i = 1; i <= numClients; i++) {
+    createClient(i);
+  }
+
+  function createClient(i) {
+    var client = require('socket.io-client')('http://localhost:' + PORT + '/');
+    client.on('connect', function() {
+      // send the id and make sure the server sends the expected
+      // id back in the ake.
+      client.emit('login', i, function(id) {
+        if (i !== id) {
+          t.ok(false, 'Unexpected id returned in ake');
+        } else {
+          akeCount++;
+        }
+
+        client.disconnect();
+        if (numClients == akeCount) {
+          t.equal(connectionCount, numClients, numClients + ' clients connected');
+          t.equal(akeCount, numClients, numClients + ' akes were received');
+          t.end();
+        }
+      });
+    });
+  }
+
+});
+
 function createTestServer(t) {
   intercept({port: PORT});
 
