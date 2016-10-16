@@ -17,6 +17,9 @@
     "lint": "jshint test lib",
     "cover": "istanbul cover test/index.js"
   },
+  "files": [
+    "lib/"
+  ],
   "author": "Benjamin Albert",
   "license": "MIT",
   "repository": {
