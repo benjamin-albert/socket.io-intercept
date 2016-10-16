@@ -53,11 +53,11 @@ This approach offers the following advantages over other libraries that are alte
 * 100% Socket.IO API consistency (**All of Socket.IO's features are supported**).
 * **Less existing code refactoring** and smaller learning curve (once you call `intercept(port)` you use [socket.io](https://www.npmjs.com/package/socket.io) and [socket.io-client](https://www.npmjs.com/package/socket.io-client) the same way you are use to).
 * If the Socket.IO team add a new feature you most likely **won't have to wait for this project to implement that feature properly**.
-* When you decide to update your Socket.IO **your tests can give you more meaningful insight** (in most cases without having to update this library).
+* When you decide to update Socket.IO **your tests can give you more meaningful insight** (in most cases without having to update this library).
 
 Another important design goal of Socket.IO Intercept is to provide the bare minimum you need to start testing your code, and therefor providing a simple way for the user to start testing there code.
 
-Once your application start growing and becomes more complex Socket.IO Intercept expects you to use it along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar for unit testing Socket.IO.
+Once your application start growing and becomes more complex Socket.IO Intercept expects to be used along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar.
 
 # Development
 
