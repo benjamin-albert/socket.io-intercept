@@ -59,6 +59,14 @@ Another important design goal of Socket.IO Intercept is to provide the bare mini
 
 Once your application start growing and becomes more complex Socket.IO Intercept expects to be used along side (or as a dependency) of other libraries that provide more powerful tools and syntactic sugar.
 
+# Minimum requirements
+
+* Node.js version 0.12 or greater.
+* Socket.IO version 1.4.5 or greater.
+* Socket.IO Client version 1.4.5 or greater.
+
+If you require support for older versions of Socket.IO or Node.js please open an issue (or even better a pull request).
+
 # Development
 
 Running unit tests:
